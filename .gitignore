@@ -1,0 +1,50 @@
+# .gitignore for Secure-Blink
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+.env.production.local
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build & Distribution
+dist/
+build/
+*.tgz
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Docker
+docker-volumes/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Serverless
+.serverless/
+.serverless_plugins/
+
+# Tests
+.jest/
+
+serverless.yml

@@ -1,0 +1,15 @@
+module.exports = {
+    USERS_TABLE: process.env.USERS_TABLE || 'users',
+    PROJECTS_TABLE: process.env.PROJECTS_TABLE || 'projects',
+    API_KEYS_TABLE: process.env.API_KEYS_TABLE || 'api_keys',
+    AUDIT_TABLE: process.env.AUDIT_TABLE || 'audit_logs',
+    ORGANIZATIONS_TABLE: process.env.ORGANIZATIONS_TABLE || 'organizations',
+    JWT_SECRET: process.env.JWT_SECRET || 'your-secret-key',
+    JWT_EXPIRY: process.env.JWT_EXPIRY || '7d',
+    PORT: process.env.PORT || 3000,
+    NODE_ENV: process.env.NODE_ENV || 'development',
+    AWS_REGION: process.env.AWS_REGION || 'us-east-1',
+    RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
+    RATE_LIMIT_MAX_REQUESTS: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
+    ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'],
+};

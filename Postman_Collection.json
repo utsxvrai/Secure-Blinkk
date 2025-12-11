@@ -1,0 +1,557 @@
+{
+  "info": {
+    "name": "Secure-Blink API",
+    "description": "Complete API collection for Secure-Blink multi-tenant application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  var jsonData = pm.response.json();",
+                  "  pm.environment.set('jwt_token', jsonData.data.token);",
+                  "  pm.environment.set('user_id', jsonData.data.user.id);",
+                  "  pm.environment.set('organization_id', jsonData.data.user.organizationId);",
+                  "  console.log('JWT Token saved to environment');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@company.com\",\n  \"password\": \"SecurePassword123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"organizationName\": \"Acme Corporation\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  var jsonData = pm.response.json();",
+                  "  pm.environment.set('jwt_token', jsonData.data.token);",
+                  "  pm.environment.set('user_id', jsonData.data.user.id);",
+                  "  console.log('Login successful - JWT Token saved');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@company.com\",\n  \"password\": \"SecurePassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newuser@company.com\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"password\": \"SecurePassword123\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"SecurePassword123\",\n  \"newPassword\": \"NewSecurePassword456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/users/{{user_id}}/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "{{user_id}}", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Deactivate User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "{{user_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Create Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  var jsonData = pm.response.json();",
+                  "  pm.environment.set('project_id', jsonData.data.id);",
+                  "  console.log('Project created - ID saved to environment');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mobile App Development\",\n  \"description\": \"React Native mobile application for iOS and Android\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "projects"]
+            }
+          }
+        },
+        {
+          "name": "Get All Projects",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "projects"]
+            }
+          }
+        },
+        {
+          "name": "Get Project by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "projects", "{{project_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mobile App - Updated\",\n  \"description\": \"Updated description for the mobile app project\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "projects", "{{project_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Project",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "projects", "{{project_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Keys",
+      "item": [
+        {
+          "name": "Create API Key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  var jsonData = pm.response.json();",
+                  "  pm.environment.set('api_key_id', jsonData.data.id);",
+                  "  pm.environment.set('api_key', jsonData.data.key);",
+                  "  console.log('API Key created - ID and Key saved');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mobile App Integration Key\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/api-keys",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys"]
+            }
+          }
+        },
+        {
+          "name": "Get All API Keys",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/api-keys",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys"]
+            }
+          }
+        },
+        {
+          "name": "Get API Key by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/api-keys/{{api_key_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys", "{{api_key_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Rotate API Key",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mobile App Integration Key - Rotated\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/api-keys/{{api_key_id}}/rotate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys", "{{api_key_id}}", "rotate"]
+            }
+          }
+        },
+        {
+          "name": "Revoke API Key",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/api-keys/{{api_key_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys", "{{api_key_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audit Logs",
+      "item": [
+        {
+          "name": "Get Organization Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/audit/logs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "audit", "logs"]
+            }
+          }
+        },
+        {
+          "name": "Get User Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/audit/user-logs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "audit", "user-logs"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Test with API Key",
+      "item": [
+        {
+          "name": "Access Endpoint with API Key",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://n0txa5bxwc.execute-api.ap-south-1.amazonaws.com",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "organization_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "project_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "api_key_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+
+services:
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ENDPOINT_URL=http://localhost:8000
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    working_dir: /home/dynamodblocal
+    volumes:
+      - ./dynamodb-data:/home/dynamodblocal/data
+    healthcheck:
+      test: ["CMD", "echo", "ok"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+
+
